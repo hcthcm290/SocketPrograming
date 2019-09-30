@@ -14,6 +14,14 @@ int main()
 		if (socket.Create() == PResult::P_Success)
 		{
 			std::cout << "Create socket successful" << std::endl;
+			if (socket.Connect(IPEndpoint("192.168.0.104", 4790)) == PResult::P_Success)
+			{
+				std::cout << "Connect to server successful" << std::endl;
+			}
+			else
+			{
+				std::cout << "Fail to connect to server" << std::endl;
+			}
 			socket.Close();
 		}
 		else

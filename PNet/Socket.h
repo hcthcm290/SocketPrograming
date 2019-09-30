@@ -15,6 +15,10 @@ namespace PNet
 		PResult Create();
 		PResult Close();
 		PResult SetSocketOption(SocketOption option, BOOL value);
+		PResult Bind(IPEndpoint endpoint);
+		PResult Listen(IPEndpoint endpoint, int backlog = 5);
+		PResult Accept(Socket &outsocket);
+		PResult Connect(IPEndpoint endpoint);
 		SocketHandle GetHandle();
 		IPVersion GetIPVersion();
 

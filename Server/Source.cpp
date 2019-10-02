@@ -5,8 +5,7 @@
 
 using namespace PNet;
 
-int main()
-{
+int main(){
 	
 	if (Network::Initialize())
 	{
@@ -23,6 +22,17 @@ int main()
 				if (socket.Accept(NewConnection) == PResult::P_Success)
 				{
 					std::cout << "Successful letting other connected" << std::endl;
+					
+					char buffer[256];
+					int bytesReceive = 0;
+					int result = NewConnection.Recv(buffer, 256, bytesReceive);
+					if (result != PResult::P_Success)
+					{
+						std::cout << "Fail to receive message from client." << std::endl;
+					}
+					std::cout << "Message Received: " << buffer << std::endl;
+
+					NewConnection.Close();
 				}
 				else
 				{

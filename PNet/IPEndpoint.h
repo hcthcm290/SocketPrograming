@@ -10,12 +10,14 @@ namespace PNet
 	{
 	public:
 		IPEndpoint(const char* ip, unsigned short port);
+		IPEndpoint(sockaddr* addr);
 		IPVersion GetIPVersion();
 		std::string GetHostname();
 		std::string GetIPString();
 		unsigned short GetPort();
 		std::vector<uint8_t> GetIPBytes();
 		sockaddr_in GetSockaddrIPv4();
+		void Print();
 	private:
 		IPVersion ipversion = IPVersion::Unknown;
 		std::string hostname = "";

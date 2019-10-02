@@ -1,5 +1,6 @@
 #include "Socket.h"
 #include <assert.h>
+#include <iostream>
 
 namespace PNet
 {
@@ -109,13 +110,48 @@ namespace PNet
 
 	PResult Socket::Accept(Socket & outsocket)
 	{
-		SocketHandle acceptedConnectionHandle = accept(handle, nullptr, nullptr);
+		sockaddr_in addr = {};
+		int size = sizeof(addr);
+		SocketHandle acceptedConnectionHandle = accept(handle,(sockaddr*)(&addr), &size);
 		if (acceptedConnectionHandle == INVALID_SOCKET)
 		{
 			int error = WSAGetLastError();
 			return PResult::P_NotYetImplemented;
 		}
+		IPEndpoint NewIPConnection((sockaddr*)(&addr));
+		std::cout << "New connection accepted!" << std::endl;
+		NewIPConnection.Print();
+
 		outsocket = Socket(IPVersion::IPv4, acceptedConnectionHandle);
+		return PResult::P_Success;
+	}
+
+	PResult Socket::Send(void * data, int numberOfBytes, int & bytesSent)
+	{
+		bytesSent = send(handle, (const char*)data, numberOfBytes, NULL);
+		if (bytesSent == SOCKET_ERROR)
+		{
+			int error = WSAGetLastError();
+			return PResult::P_NotYetImplemented;
+		}
+		return PResult::P_Success;
+	}
+
+	PResult Socket::Recv(void * destination, int numberOfBytes, int & bytesReceive)
+	{
+		bytesReceive = recv(handle, (char*)destination, numberOfBytes, NULL);
+
+		if (bytesReceive == 0) //The connection has been gracefully closed
+		{
+			return PResult::P_NotYetImplemented;
+		}
+
+		if (bytesReceive == SOCKET_ERROR)
+		{
+			int error = WSAGetLastError();
+			return PResult::P_NotYetImplemented;
+		}
+
 		return PResult::P_Success;
 	}
 
@@ -128,6 +164,7 @@ namespace PNet
 			int error = WSAGetLastError();
 			return PResult::P_NotYetImplemented;
 		}
+
 
 		return PResult::P_Success;
 	}

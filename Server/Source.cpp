@@ -1,7 +1,10 @@
 //Server code
 
 #include <PNet/IncludeMe.h>
+#include <stdio.h>
+#include <conio.h>
 #include <iostream>
+
 
 using namespace PNet;
 
@@ -23,14 +26,19 @@ int main(){
 				{
 					std::cout << "Successful letting other connected" << std::endl;
 					
-					char buffer[256];
-					int bytesReceive = 0;
-					int result = NewConnection.Recv(buffer, 256, bytesReceive);
-					if (result != PResult::P_Success)
+					Packet packet;
+					while (true)
 					{
-						std::cout << "Fail to receive message from client." << std::endl;
+						PResult result = NewConnection.Recv(packet);
+						if (result != PResult::P_Success)
+						{
+							break;
+						}
+						std::string a, b;
+						packet >> a >> b;
+						std::cout << a << std::endl;
+						std::cout << b << std::endl;
 					}
-					std::cout << "Message Received: " << buffer << std::endl;
 
 					NewConnection.Close();
 				}

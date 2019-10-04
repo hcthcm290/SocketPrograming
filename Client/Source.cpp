@@ -14,17 +14,22 @@ int main()
 		if (socket.Create() == PResult::P_Success)
 		{
 			std::cout << "Create socket successful" << std::endl;
-			if (socket.Connect(IPEndpoint("1.54.12.14", 4790)) == PResult::P_Success)
+			if (socket.Connect(IPEndpoint("42.118.65.139", 4790)) == PResult::P_Success)
 			{
 				std::cout << "Connect to server successful" << std::endl;
-				char buffer[256];
-				std::cout << "Make a message you want to send: ";
-				std::cin >> buffer;
-				int bytesSent = 0;
-				int result = socket.Send(buffer, 256, bytesSent);
-				if (result == PResult::P_Success)
+				
+				Packet packet;
+				packet << "This is the first packet!";
+				packet << "This is a second packet!";
+				while (true)
 				{
-					std::cout << "Message sent." << std::endl;
+					PResult result = socket.Send(packet);
+					if (result != PResult::P_Success)
+					{
+						break;
+					}
+					std::cout << "Attemp to send chunk of data!" << std::endl;
+					Sleep(500);
 				}
 			}
 			else
